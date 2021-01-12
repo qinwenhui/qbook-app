@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      searchIcon: require("@/assets/icon/icon-search.png"),
+      searchIcon: require("@/assets/icon/grid3.png"),
       userInfoIcon: require("@/assets/icon/icon-search.png"),
     }
   },
