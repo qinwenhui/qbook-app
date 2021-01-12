@@ -7,9 +7,9 @@
     </div>
     <!-- 右边的内容 -->
     <div class="content-div">
-      <span>{{title}}</span>
-      <span>{{desc}}</span>
-      <span>{{author}}</span>
+      <div class="title van-ellipsis"><span>{{title}}</span></div>
+      <div class="desc van-multi-ellipsis--l3"><span>{{desc}}</span></div>
+      <div class="author van-ellipsis"><span>{{author}}</span></div>
     </div>
   </div>
 </template>
@@ -29,6 +29,9 @@ export default {
       },
       height: {
           default: '150px'
+      },
+      gutter: {
+          default: '0px'
       },
       title: {
           default: '标题'
@@ -54,17 +57,41 @@ export default {
 </script>
 <style lang='scss' scoped>
 .main {
-  float: left;
-  background-color: bisque;
   .img-div {
-    width: 25%;
+    width: 23%;
+    height: 100%;
     float: left;
-    background-color: yellow;
+    box-shadow: 0 0 2px 0 #aaaaaa;
   }
   .content-div {
     width: 70%;
+    height: 100%;
     float: left;
-    background-color: goldenrod;
+    padding: 5px 5px 5px 10px;
+    .title {
+      font-weight: bold;
+      font-size: 15px;
+      display:block;
+      height:25%;
+    }
+    .desc {
+      font-size: .3rem;
+      display:block;
+      height: 44%;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      color: #6e6a6a;
+    }
+    .author {
+      font-size: 13px;
+      display:block;
+      height: 23%;
+      padding-top: 2%;
+      color: #444444;
+    }
   }
 }
 </style>

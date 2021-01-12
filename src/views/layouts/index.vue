@@ -27,9 +27,23 @@ export default {
           icon: 'home-o'
         },
         {
-          title: '关于我',
+          title: '书架',
           to: {
-            name: 'About'
+            name: 'Bookself'
+          },
+          icon: 'newspaper-o'
+        },
+        {
+          title: '排行',
+          to: {
+            name: 'Rank'
+          },
+          icon: 'chart-trending-o'
+        },
+        {
+          title: '我的',
+          to: {
+            name: 'User'
           },
           icon: 'user-o'
         }
