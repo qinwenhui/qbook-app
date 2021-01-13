@@ -16,7 +16,7 @@
       <!-- 宫格导航栏 -->
       <div class="grid-div">
         <van-grid :column-num="gridList.length">
-          <van-grid-item  v-for="(item, index) in gridList" :key="index" :icon="item.icon" :text="item.text" />
+          <van-grid-item  v-for="(item, index) in gridList" :key="index" :icon="item.icon" :text="item.text" @click="$router.push(item.url)"/>
         </van-grid>
       </div>
 
@@ -34,7 +34,7 @@
         <!-- 块内容 -->
         <div>
           <van-grid>
-            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in hotBooks" :key="book.id" :image="book.image" :text="book.title" />
+            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in hotBooks" :key="book.id" :image="book.image" :text="book.title" @click.native="$router.push('/bookinfo/'+book.id)" />
           </van-grid>
         </div>
       </div>
@@ -53,7 +53,7 @@
         <!-- 块内容 -->
         <div>
           <div v-for="book in newBooks" :key="book.id" >
-            <BookHorizontal width="100%" height="110px" gutter="0px" :image="book.image" :title="book.title" :desc="book.desc" :author="book.author" />
+            <BookHorizontal width="100%" height="110px" gutter="0px" :image="book.image" :title="book.title" :desc="book.desc" :author="book.author" @click.native="$router.push('/bookinfo/'+book.id)" />
             <van-divider />
           </div>
         </div>
@@ -73,7 +73,7 @@
         <!-- 块内容 -->
         <div>
           <van-grid>
-            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in overBooks" :key="book.id" :image="book.image" :text="book.title" />
+            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in overBooks" :key="book.id" :image="book.image" :text="book.title" @click.native="$router.push('/bookinfo/'+book.id)" />
           </van-grid>
         </div>
       </div>
@@ -92,7 +92,7 @@
         <!-- 块内容 -->
         <div>
           <van-grid>
-            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in likeBooks" :key="book.id" :image="book.image" :text="book.title" />
+            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in likeBooks" :key="book.id" :image="book.image" :text="book.title" @click.native="$router.push('/bookinfo/'+book.id)" />
           </van-grid>
         </div>
       </div>
@@ -121,23 +121,28 @@ export default {
       gridList: [
         {
           icon: require('@/assets/icon/grid1.png'),
-          text: '分类'
+          text: '分类',
+          url: '/category'
         },
         {
           icon: require('@/assets/icon/grid2.png'),
-          text: '排行'
+          text: '排行',
+          url: '/rank'
         },
         {
           icon: require('@/assets/icon/grid4.png'),
-          text: '小说'
+          text: '小说',
+          url: '/category'
         },
         {
           icon: require('@/assets/icon/grid5.png'),
-          text: '漫画'
+          text: '漫画',
+          url: '/category'
         },
         {
           icon: require('@/assets/icon/grid6.png'),
-          text: '个人中心'
+          text: '个人中心',
+          url: '/user'
         },
       ],
       //热门推荐

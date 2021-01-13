@@ -37,5 +37,14 @@ export const constantRouterMap = [
         meta: { title: '我的', keepAlive: false }
       }
     ]
+  },
+  {
+    path: '/bookinfo/:id',
+    name: 'Bookinfo',
+    component: () => import('@/views/book/bookinfo'),
+    meta: {
+      title: '书籍详情',
+      keepAlive: false
+    }
   }
 ]
