@@ -3,7 +3,7 @@
   <div class="main">
       <!-- 导航栏 -->
       <div>
-        <van-nav-bar title="书籍详情" left-arrow>
+        <van-nav-bar title="书籍详情" left-arrow @click-left="$router.go(-1)">
             <template #right>
                 <van-icon name="home-o" size="20" @click="$router.push('/')" />
             </template>
@@ -44,7 +44,7 @@
                 <van-button plain type="primary" v-if="book.in==1" disabled  class="btn">已加入书架</van-button>
             </van-col>
             <van-col span="12">
-                <van-button type="danger" class="btn">开始阅读</van-button>
+                <van-button type="danger" class="btn" @click="$router.push('/chapter/1')">开始阅读</van-button>
             </van-col>
         </van-row>
       </div>
@@ -63,33 +63,47 @@
      <!--目录-->
      <div class="mulu">
           <van-cell-group>
-            <van-cell title="目录" value="倒序"/>
+            <van-cell title="目录" value="更多" @click="$router.push('/book/catalog')"/>
           </van-cell-group>
           <div class="content">
-                <div v-if="mulu!=null && muluList.length>0">
+                <div v-if="muluList!=null && muluList.length>0">
                     <van-list
-                    v-model="loading"
-                    :finished="finished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
                     >
-                        <div v-for="mulu in muluList" :key="mulu.id" >
-                            <van-cell :title="mulu.name" value="免费" size="large" />
+                        <div>
+                            <van-cell v-for="mulu in muluList" :key="mulu.id" :title="mulu.name" value="免费" size="large" />
                         </div>
                     </van-list>
+                    <van-pagination v-model="currentPage" :page-count="pageSize" mode="simple" />
                 </div>
                 <van-empty v-if="muluList==null || muluList.length==0" image="error" description="暂无目录" />
           </div>
       </div>
-      书籍详情{{id}}
-      <div @click="$router.push('/bookinfo/12')">点击跳别的书</div>
-      <br><br>
-      <div @click="$router.push('/')">点击到首页</div>
+      
+      <!-- 猜你喜欢 -->
+      <div class="hot-div new-div">
+        <!-- 块标题 -->
+        <div class="title-div">
+          <span class="shu">丨</span>
+          <span class="title">猜你喜欢</span>
+          <div class="more">
+            <span>更多</span>
+            <van-icon name="arrow" />
+          </div>
+        </div>
+        <!-- 块内容 -->
+        <div>
+          <van-grid>
+            <BookVertical width="22%" height="160px" gutter="2.5%" v-for="book in likeBooks" :key="book.id" :image="book.image" :text="book.title" @click.native="$router.push('/bookinfo/'+book.id)" />
+          </van-grid>
+        </div>
+      </div>
+
   </div>
 </template>
 
 <script>
-import { NavBar, Tag } from 'vant';
+import { NavBar, Tag, Pagination, Empty, Grid } from 'vant';
+import BookVertical from '@/components/book/BookVertical';
 const defaultBook = {
     id: 0,
     title: '玄天龙尊',
@@ -100,7 +114,7 @@ const defaultBook = {
     category: [
         '玄幻','修仙','升级流','幻想','架空'
     ],
-    in: 1,
+    in: 0,
     desc: '星辰大陆，浩天帝国，时空倒转，斗转星移，是为逆天改命！玄天功法、龙尊神戒，助我逞威仙神人三界，成就玄天至尊巅峰！星辰大陆，浩天帝国，时空倒转，斗转星移，是为逆天改命！玄天功法、龙尊神戒，助我逞威仙神人三界，成就玄天至尊巅峰！星辰大陆，浩天帝国，时空倒转，斗转星移，是为逆天改命！玄天功法、龙尊神戒，助我逞威仙神人三界，成就玄天至尊巅峰！'
 }
 export default {
@@ -125,15 +139,23 @@ export default {
             {id: 9, name: '第九章'},
             {id: 10, name: '第十章'},
         ],
-        loading: false,
-        finished: false,
+        currentPage: 1,
+        pageSize: 12,
+        //猜你喜欢
+        likeBooks: [
+          {id: '1', title: '我只有九万九千岁', image: 'http://static.zongheng.com/upload/cover/de/92/de92f1baed4bb60b21cc751cb86ee272.jpeg'},
+          {id: '2', title: '天赋逆变', image: 'http://static.zongheng.com/upload/cover/30/30/30308356ebd27f4a54f2f741ffda5087.jpeg'},
+          {id: '3', title: '天道莫开', image: 'http://static.zongheng.com/upload/cover/8f/13/8f1319c9eafa3ff6c9f4351b57690ec9.jpeg'},
+          {id: '4', title: '神启帝国', image: 'http://static.zongheng.com/upload/cover/ca/17/ca175e74e7843bc9cd61d18d5b8afe59.jpeg'},
+        ],
+
     };
   },
   props:{
       
   },
   components: {
-      [NavBar.name]: NavBar, [Tag.name]: Tag
+      [NavBar.name]: NavBar, [Tag.name]: Tag, [Pagination.name]: Pagination, [Empty.name]: Empty, [Grid.name]: Grid, BookVertical
   },
 
   computed: {},
@@ -264,6 +286,36 @@ export default {
     .mulu {
         margin-top: .5rem;
         background-color: white;
+    }
+    .hot-div {
+      margin-top: 13px;
+      background-color: white;
+      .title-div {
+        height: 40px;
+        .shu {
+          height: 100%;
+          font-size: 15px;
+          line-height: 40px;
+          color: red;
+        }
+        .title {
+          font-weight: bold;
+          font-size: 15px;
+          line-height: 40px;
+        }
+        .more {
+          font-size: 13px;
+          line-height: 40px;
+          float: right;
+          margin-right: 5px;
+          color: #aaaaaa;
+        }
+      }
+    }
+    .new-div {
+      padding: 0 5px 0 5px;
+      height: 100%;
+      float:left;
     }
 }
 </style>
