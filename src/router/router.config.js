@@ -39,6 +39,24 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/user/login'),
+    meta: {
+      title: '登录',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/user/register'),
+    meta: {
+      title: '注册',
+      keepAlive: false
+    }
+  },
+  {
     path: '/bookinfo/:id',
     name: 'Bookinfo',
     component: () => import('@/views/book/bookinfo'),

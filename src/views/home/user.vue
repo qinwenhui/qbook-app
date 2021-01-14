@@ -96,7 +96,7 @@
           },
           //退出登录
           logout() {
-
+			  this.$router.push('/login')
           }												  
 	  }		  
 	};
