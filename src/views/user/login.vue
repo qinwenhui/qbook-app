@@ -36,14 +36,16 @@
 
       <!--按钮-->
       <div class="btn-div">
-          <van-button type="primary">登录</van-button>
+          <van-button type="primary" @click="toLogin">登录</van-button>
           <van-button type="warning" @click="$router.push('/register')">前往注册</van-button>
       </div>
   </div>
 </template>
 
 <script>
-import { NavBar } from 'vant';
+import { NavBar, Toast } from 'vant';
+import { login } from 'api/user';
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data () {
@@ -61,7 +63,26 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+      ...mapActions(['setUserName', 'setToken']),
+      toLogin() {
+          //判断账号密码是否为空
+          if(this.username==''||this.password==''){
+              Toast('账号密码不能为空');
+          }else{
+              login({username: this.username, password: this.password}).then(res => {
+                  if(res.code == 0){
+                      //登录成功,跳转到个人中心页面
+                      this.setUserName(this.username);
+                      this.setToken(res.data)
+                      this.$router.push('/user')
+                  }else{
+                      Toast.fail(res.msg);
+                  }
+              })
+          }
+      }
+  },
   created() {}
 }
 

@@ -3,7 +3,7 @@
 		<!-- 头部 -->
         <div class="header">
             <div class="header-img">
-                <van-image width="2rem" height="2rem" round src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3874067489,2447793058&fm=11&gp=0.jpg" />
+                <van-image width="2rem" height="2rem" round :src="userInfo.headimage" />
             </div>
                 
             <div class="header-content">
@@ -36,13 +36,15 @@
 		</div>
 		<!-- 退出登录按钮 -->
 		<div class="loginout_div">
-			<van-button type="primary" block color="linear-gradient(to right, #ff7583, #ee0d2e)" @click='logout'>退出登录</van-button>
+			<van-button type="primary" block color="linear-gradient(to right, #ff7583, #ee0d2e)" @click='toLogout'>退出登录</van-button>
 		</div>
 	</div>
 </template>
 
 <script>
 	import { Button, Grid, GridItem, Cell, CellGroup, Toast } from 'vant';
+	import { mapGetters } from 'vuex';
+	import { getUserInfo, logout } from 'api/user';
 	export default {
 	  components: {
 		[Grid.name]: Grid,
@@ -56,47 +58,48 @@
           userInfo:{
               username: '用户名'
           },
-          token: null,
-		  //加载进度
-		  loadArr: [],
 	    }
 	  },
-	  created: function (){
-		  //初始化数据
-		  this.initData();
+	  computed: {
+		  ...mapGetters(['loginStatus'])
 	  },
-	  watch: {
-		  loadArr: {
-			  deep: true,
-			  handler: function (list){
-				  //如果加载进度达到3，说明三个接口都已经返回，加载结束
-				  if(Object.keys(list).length == 1){
-					  //关闭加载中提示
-					  Toast.clear();
-				  }
-			  }
+	  created: function (){
+		  console.log(this.loginStatus)
+		  //先判断是否登录，未登录的自动跳转登录页面
+		  if(this.loginStatus){
+			//初始化数据
+			this.initData();
+		  }else{
+			this.$router.push('/login')
 		  }
 	  },
+	  watch: {
+	  },
 	  methods: {
-		  initData: function (){
-			//先清空加载进度
-			this.loadArr.length = 0;
-			//显示加载中
-			Toast.loading({
-				message: '加载中...',
-				forbidClick: true,
-			});			
-			  
+		  initData: function (){		
 			this.loadUserInfo();
 		  },
 		  //用户信息  
 		  loadUserInfo: function (){
-			//加载完成进度+1
-			this.loadArr.push(true);
+			getUserInfo().then(res=>{
+				if(res.code==0){
+					//获取当前登录用户信息成功
+					this.userInfo = res.data
+				}else{
+					Toast.fail(res.msg);
+				}
+			})
+			
           },
           //退出登录
-          logout() {
-			  this.$router.push('/login')
+          toLogout() {
+			  logout().then(res=>{
+				  if(res.code == '8848'){
+					  this.$router.push('/login')
+				  }else{
+					  Toast.fail(res.msg)
+				  }
+			  })
           }												  
 	  }		  
 	};

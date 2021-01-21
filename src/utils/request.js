@@ -21,7 +21,7 @@ service.interceptors.request.use(
       })
     }
     if (store.getters.token) {
-      config.headers['X-Token'] = ''
+      config.headers['Token'] = store.getters.token
     }
     return config
   },
@@ -39,13 +39,19 @@ service.interceptors.response.use(
     if (res.status && res.status !== 200) {
       // 登录超时,重新登录
       if (res.status === 401) {
-        store.dispatch('FedLogOut').then(() => {
-          location.reload()
-        })
+        console.log('响应码：401')
       }
       return Promise.reject(res || 'error')
     } else {
-      return Promise.resolve(res)
+      if(res.code == '8848'){
+        //处于未登录状态，清空登录数据
+        store.dispatch('logout').then(() => {
+          // location.reload()
+        })
+        return Promise.resolve(res)
+      }else{
+        return Promise.resolve(res)
+      }
     }
   },
   error => {

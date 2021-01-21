@@ -11,12 +11,19 @@ export function login(data) {
   })
 }
 
+// 退出登录
+export function logout() {
+  return request({
+    url: api.Logout,
+    method: 'get',
+  })
+}
+
 // 用户信息 post 方法
-export function getUserInfo(data) {
+export function getUserInfo() {
   return request({
     url: api.UserInfo,
-    method: 'post',
-    data,
+    method: 'get',
     hideloading: true
   })
 }
