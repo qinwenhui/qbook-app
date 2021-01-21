@@ -8,8 +8,8 @@
     <div class="content">
       <!-- 轮播图 -->
       <van-swipe :autoplay="3000" class="index-swipe">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <van-image width="100%" height="100%" lazy-load fit="fill" :src="image"/>
+        <van-swipe-item v-for="(swipe, index) in swipeList" :key="index" @click="goSwipe(swipe)">
+          <van-image width="100%" height="100%" lazy-load fit="fill" :src="swipe.image"/>
         </van-swipe-item>
       </van-swipe>
 
@@ -107,16 +107,12 @@ import TopBar from '@/components/TopBar';
 import BookVertical from '@/components/book/BookVertical';
 import BookHorizontal from '@/components/book/BookHorizontal';
 import { Grid, GridItem, Divider } from 'vant';
+import { swipe } from '@/api/home';
 export default {
   data() {
     return {
       topLogo: require('@/assets/icon/logo.png'),
-      images: [
-        'http://static.zongheng.com/upload/recommend/77/03/77034a484c3ebfd2e41e8c23a469137c.jpeg',
-        'http://static.zongheng.com/upload/recommend/71/40/7140c24a7c17e75d827782ab356484a1.jpeg',
-        'http://static.zongheng.com/upload/recommend/15/b4/15b4d97f84ba0525eecc4613b7d8abd6.jpeg',
-        'http://static.zongheng.com/upload/recommend/67/7f/677f7fd960947652f43033eff9734212.jpeg',
-        'http://static.zongheng.com/upload/recommend/e2/6a/e26adbcb31f06680e0821fb9895a7951.jpeg'
+      swipeList: [
       ],
       gridList: [
         {
@@ -186,10 +182,36 @@ export default {
 
   mounted() { },
 
-  methods: {},
+  methods: {
+    initData() {
+      //加载轮播图
+      this.getSwipe()
+    },
+    //获取轮播图
+    getSwipe() {
+      swipe().then(res=>{
+        if(res.code == 0){
+          this.swipeList = res.data
+        }
+      })
+    },
+    //跳转到轮播图详情
+    goSwipe(swipe) {
+      if(swipe.type==0){
+        //轮播图是站内书籍资源,url参数是书籍编号
+        this.$router.push( `/bookinfo/${swipe.url}`)
+      }else{
+        //轮播图是站外资源，通过外链跳转
+        window.location.href = swipe.url
+      }
+    }
+  },
 
   components: {
     TopBar, [Grid.name]: Grid, [GridItem.name]: GridItem, BookVertical, BookHorizontal, [Divider.name]: Divider
+  },
+  created() {
+    this.initData()
   }
 }
 </script>
