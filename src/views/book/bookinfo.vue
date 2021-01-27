@@ -13,7 +13,7 @@
       <div class="header">
           <!--封面-->
           <div class="header-cover">
-              <van-image width="100%" height="100%" lazy-load :src="book.cover" />
+              <van-image width="100%" height="100%" lazy-load :src="book.image" />
           </div>
           <!--书名作者等信息-->
           <div class="header-content">
@@ -22,7 +22,7 @@
               </div>
               <div class="author">
                   <van-icon name="user-o" />
-                  <span>{{book.author}}</span>
+                  <span>{{book.auther}}</span>
                   <span class="shu">|</span>
                   <span class="hot">1.2万人气</span>
               </div>
@@ -102,13 +102,14 @@
 </template>
 
 <script>
-import { NavBar, Tag, Pagination, Empty, Grid } from 'vant';
+import { NavBar, Tag, Pagination, Empty, Grid, Toast } from 'vant';
 import BookVertical from '@/components/book/BookVertical';
+import { getBookInfo } from '@/api/book';
 const defaultBook = {
     id: 0,
     title: '玄天龙尊',
-    cover: 'https://yue06.sogoucdn.com/cdn/image/book/5116541314_1542361470851.jpg',
-    author: '海龙是的撒大所多多',
+    image: 'https://yue06.sogoucdn.com/cdn/image/book/5116541314_1542361470851.jpg',
+    auther: '海龙是的撒大所多多',
     type: '小说',
     status: '连载中',
     category: [
@@ -178,7 +179,20 @@ export default {
   methods: {
       //初始化数据
       initData() {
-
+          this.getBookInfo()
+      },
+      //获取书籍信息
+      getBookInfo() {
+          const params = {
+              id: this.id
+          }
+          getBookInfo(params).then(res=>{
+            if(res.code == "0"){
+                // this.book = res.data
+            }else{
+                Toast.fail(res.msg)
+            }
+          })
       },
       //折叠或展开简介
       showDesc() {

@@ -13,7 +13,9 @@ const api = {
     New: '/index/new',
     //经典完本
     End: '/index/End',
-  }
+  },
+  //书籍详情
+  BookInfo: '/book/info',
 }
 
 export default api
